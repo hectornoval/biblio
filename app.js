@@ -67,7 +67,21 @@ async function stopCamera() {
     document.getElementById('cameraBtn').classList.remove('hidden');
     document.getElementById('videoContainer').classList.add('hidden');
 }
-
+async function detectBarcodeSimple(imageData) {
+    return new Promise((resolve) => {
+        Quagga.decodeSingle({
+            decoder: { readers: ["ean_reader"] },
+            locate: true,
+            src: imageData
+        }, function(result) {
+            if (result && result.codeResult) {
+                resolve(result.codeResult.code);
+            } else {
+                resolve(null);
+            }
+        });
+    });
+}
 function onScanSuccess(decodedText, decodedResult) {
     console.log('Barcode detected:', decodedText, decodedResult);
     

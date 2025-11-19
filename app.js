@@ -1,6 +1,5 @@
 let currentBookData = null;
-let stream = null;
-let scanning = false;
+let html5QrCode = null;
 
 document.getElementById('searchBtn').addEventListener('click', searchBook);
 document.getElementById('isbnInput').addEventListener('keypress', (e) => {
@@ -9,81 +8,105 @@ document.getElementById('isbnInput').addEventListener('keypress', (e) => {
 document.getElementById('copyBtn').addEventListener('click', copyToClipboard);
 document.getElementById('cameraBtn').addEventListener('click', startCamera);
 document.getElementById('closeCameraBtn').addEventListener('click', stopCamera);
+document.getElementById('manualEntryBtn').addEventListener('click', stopCamera);
 
 async function startCamera() {
     try {
         hideError();
         hideResult();
         
-        stream = await navigator.mediaDevices.getUserMedia({ 
-            video: { facingMode: 'environment' } 
-        });
-        
-        const video = document.getElementById('video');
-        video.srcObject = stream;
-        
         document.getElementById('cameraBtn').classList.add('hidden');
         document.getElementById('videoContainer').classList.remove('hidden');
         
-        scanning = true;
-        scanBarcode();
+        html5QrCode = new Html5Qrcode("reader");
+        
+        const config = {
+            fps: 10,
+            qrbox: { width: 250, height: 150 },
+            aspectRatio: 1.777778,
+            formatsToSupport: [
+                Html5QrcodeSupportedFormats.EAN_13,
+                Html5QrcodeSupportedFormats.EAN_8,
+                Html5QrcodeSupportedFormats.CODE_128,
+                Html5QrcodeSupportedFormats.CODE_39,
+                Html5QrcodeSupportedFormats.UPC_A,
+                Html5QrcodeSupportedFormats.UPC_E
+            ],
+            experimentalFeatures: {
+                useBarCodeDetectorIfSupported: true
+            },
+            rememberLastUsedCamera: true,
+            showTorchButtonIfSupported: true
+        };
+        
+        await html5QrCode.start(
+            { facingMode: "environment" },
+            config,
+            onScanSuccess,
+            onScanError
+        );
         
     } catch (error) {
         console.error('Camera error:', error);
-        showError('No se pudo acceder a la cámara. Verifica los permisos o usa la entrada manual.');
+        showError('No se pudo acceder a la cámara. Verifica los permisos en la configuración de tu navegador.');
+        document.getElementById('cameraBtn').classList.remove('hidden');
+        document.getElementById('videoContainer').classList.add('hidden');
     }
 }
 
-function stopCamera() {
-    scanning = false;
-    if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-        stream = null;
+async function stopCamera() {
+    if (html5QrCode) {
+        try {
+            await html5QrCode.stop();
+            html5QrCode.clear();
+        } catch (error) {
+            console.error('Error stopping camera:', error);
+        }
+        html5QrCode = null;
     }
     document.getElementById('cameraBtn').classList.remove('hidden');
     document.getElementById('videoContainer').classList.add('hidden');
 }
 
-async function scanBarcode() {
-    if (!scanning) return;
+function onScanSuccess(decodedText, decodedResult) {
+    console.log('Barcode detected:', decodedText, decodedResult);
     
-    const video = document.getElementById('video');
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
+    // Clean the barcode
+    let cleanCode = decodedText.replace(/[-\s]/g, '');
     
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    // Remove any non-numeric characters
+    cleanCode = cleanCode.replace(/\D/g, '');
     
-    if (canvas.width > 0 && canvas.height > 0) {
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+    console.log('Cleaned code:', cleanCode);
+    
+    // Check if it looks like a valid ISBN (10 or 13 digits)
+    if (cleanCode.length >= 10 && cleanCode.length <= 13) {
+        // Show success feedback
+        const statusDiv = document.createElement('div');
+        statusDiv.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-bounce';
+        statusDiv.textContent = '¡ISBN detectado! ' + cleanCode;
+        document.body.appendChild(statusDiv);
         
-        // Try to detect barcode using simple pattern detection
-        // Note: For production, you'd want to use a library like QuaggaJS or ZXing
-        const code = await detectBarcodeSimple(imageData);
+        setTimeout(() => {
+            statusDiv.remove();
+        }, 2000);
         
-        if (code) {
-            stopCamera();
-            document.getElementById('isbnInput').value = code;
-            await searchBook();
-            return;
-        }
-    }
-    
-    if (scanning) {
-        setTimeout(() => scanBarcode(), 500);
+        stopCamera();
+        document.getElementById('isbnInput').value = cleanCode;
+        
+        // Small delay before searching to show the success message
+        setTimeout(() => {
+            searchBook();
+        }, 500);
+    } else {
+        console.log('Invalid ISBN length:', cleanCode.length);
     }
 }
 
-async function detectBarcodeSimple(imageData) {
-    // This is a simplified placeholder
-    // In production, integrate a proper barcode library like:
-    // - QuaggaJS: https://github.com/serratus/quaggaJS
-    // - ZXing: https://github.com/zxing-js/library
-    
-    // For now, return null (manual entry required)
-    // To add real scanning, include one of these libraries
-    return null;
+function onScanError(errorMessage) {
+    // Scanning errors are normal when no barcode is in view
+    // Only log to console, don't show to user
+    // console.log('Scan error:', errorMessage);
 }
 
 async function searchBook() {

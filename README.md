@@ -4,24 +4,25 @@ Herramienta web para generar citas bibliográficas en formato latinoamericano a 
 
 ## Características
 
-- Búsqueda de libros por ISBN
-- **Escaneo con cámara** (entrada manual también disponible)
-- Formato de cita latinoamericano/ibérico
-- Copia al portapapeles con un clic
-- Diseño responsive
+- ✅ **Escaneo automático con cámara** - Detección real de códigos de barras ISBN
+- ✅ Entrada manual de ISBN como alternativa
+- ✅ Formato de cita latinoamericano/ibérico
+- ✅ Marco visual con feedback en tiempo real
+- ✅ Copia al portapapeles con un clic
+- ✅ Diseño responsive y elegante
 
 ## Uso
 
-**Opción 1: Entrada Manual**
-1. Ingresa el ISBN del libro (con o sin guiones)
+**Opción 1: Escanear con Cámara (Recomendado)**
+1. Haz clic en "Activar Cámara para Escanear"
+2. Permite el acceso a la cámara cuando se solicite
+3. Coloca el código de barras del libro dentro del marco rectangular
+4. ¡El ISBN se detectará automáticamente y buscará el libro!
+
+**Opción 2: Entrada Manual**
+1. Escribe o pega el ISBN del libro (con o sin guiones)
 2. Haz clic en "Buscar"
 3. Copia la cita generada
-
-**Opción 2: Escanear con Cámara**
-1. Haz clic en "Activar Cámara para Escanear"
-2. Permite el acceso a la cámara
-3. Posiciona el código de barras frente a la cámara
-4. El ISBN se detectará automáticamente (requiere librería adicional)
 
 ## Mejora del Escaneo de Códigos de Barras
 

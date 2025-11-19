@@ -4,12 +4,11 @@ Herramienta web para generar citas bibliográficas en formato latinoamericano a 
 
 ## Características
 
-- ✅ **Escaneo automático con cámara** - Detección real de códigos de barras ISBN
-- ✅ Entrada manual de ISBN como alternativa
-- ✅ Formato de cita latinoamericano/ibérico
-- ✅ Marco visual con feedback en tiempo real
-- ✅ Copia al portapapeles con un clic
-- ✅ Diseño responsive y elegante
+- **Escaneo automático con cámara** - Detección real de códigos de barras ISBN
+-  Entrada manual de ISBN como alternativa
+-  Formato de cita latinoamericano/ibérico
+-  Marco visual con feedback en tiempo real
+-  Copia al portapapeles con un clic
 
 ## Uso
 

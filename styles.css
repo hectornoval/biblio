@@ -378,24 +378,23 @@ html {
     position: relative;
 }
 
-#video {
+#reader {
     width: 100%;
-    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+#reader video {
     border-radius: 12px;
 }
 
-/* Status messages */
-#scanStatus {
-    animation: pulse 2s ease-in-out infinite;
+/* Override html5-qrcode default styles */
+#reader__scan_region {
+    border-radius: 12px !important;
 }
 
-@keyframes pulse {
-    0%, 100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.7;
-    }
+#reader__dashboard_section_csr {
+    display: none !important;
 }
 
 /* Responsive camera frame */

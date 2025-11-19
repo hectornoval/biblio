@@ -59,43 +59,32 @@
                     
                     <div id="videoContainer" class="hidden">
                         <div class="relative">
-                            <video id="video" autoplay playsinline class="w-full rounded-lg"></video>
-                            
-                            <!-- Scanning frame overlay -->
-                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <div class="scan-frame">
-                                    <div class="scan-line"></div>
-                                    <div class="corner corner-tl"></div>
-                                    <div class="corner corner-tr"></div>
-                                    <div class="corner corner-bl"></div>
-                                    <div class="corner corner-br"></div>
-                                </div>
-                            </div>
-                            
-                            <!-- Instructions overlay -->
-                            <div class="absolute top-4 left-0 right-0 text-center pointer-events-none">
-                                <div class="inline-block bg-black bg-opacity-70 text-white px-4 py-2 rounded-lg">
-                                    <p class="text-sm font-medium">Coloca el código de barras en el marco</p>
-                                </div>
-                            </div>
-                            
-                            <!-- Status indicator -->
-                            <div id="scanStatus" class="absolute bottom-4 left-0 right-0 text-center pointer-events-none">
-                                <div class="inline-block bg-indigo-600 bg-opacity-90 text-white px-4 py-2 rounded-lg">
-                                    <p class="text-sm font-medium">Escaneando...</p>
-                                </div>
-                            </div>
+                            <div id="reader" class="w-full rounded-lg overflow-hidden"></div>
                         </div>
                         
-                        <div class="text-sm text-gray-600 text-center my-4">
-                            <p class="font-medium mb-2">Mantén el código de barras dentro del marco</p>
-                            <p class="text-xs">La cámara intentará detectar el ISBN automáticamente</p>
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 my-4">
+                            <h3 class="font-semibold text-blue-900 mb-2">💡 Consejos para escanear:</h3>
+                            <ul class="text-sm text-blue-800 space-y-1 list-disc list-inside">
+                                <li>Mantén el código de barras dentro del marco rectangular</li>
+                                <li>Asegúrate de tener buena iluminación</li>
+                                <li>Mantén la cámara estable y enfocada</li>
+                                <li>El código de barras debe estar cerca (unos 10-15 cm)</li>
+                                <li>Prueba con diferentes ángulos si no detecta</li>
+                            </ul>
                         </div>
+                        
                         <button
                             id="closeCameraBtn"
-                            class="w-full py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
+                            class="w-full py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium mb-2"
                         >
                             Cerrar Cámara
+                        </button>
+                        
+                        <button
+                            id="manualEntryBtn"
+                            class="w-full py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors font-medium text-sm"
+                        >
+                            Preferir entrada manual
                         </button>
                     </div>
                 </div>
